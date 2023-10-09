@@ -40,16 +40,16 @@ base_config = Config({
     'name': 'Base Config',
 
     # Training images and cropped faces
-    'train_images': 'data/NCAER-S/images/train',
-    'train_crop': 'data/NCAER-S/crop/train',
+    'train_images': 'content/engagement-global-local/engagement-global-local/ImageData3/Train',
+    'train_crop': 'content/engagement-global-local/engagement-global-local/ImageData3/CropTrain',
 
     # Valid images and cropped faces
-    'val_images': 'data/NCAER-S/images/val',
-    'val_crop': 'data/NCAER-S/crop/val',
+    'val_images': 'content/engagement-global-local/engagement-global-local/ImageData3/Validation',
+    'val_crop': 'content/engagement-global-local/engagement-global-local/ImageData3/CropValidation',
 
     # test images and cropped faces
-    'test_images': 'data/NCAER-S/images/test',
-    'test_crop': 'data/NCAER-S/crop/test',
+    'test_images': 'content/engagement-global-local/engagement-global-local/ImageData3/Test',
+    'test_crop': 'content/engagement-global-local/engagement-global-local/ImageData3/CropTest',
 
     'face_input_size': [96, 96],
     'context_input_size': [112, 112],
@@ -69,8 +69,8 @@ base_config = Config({
     # pooling except the last layer
 
     'dropout_rate': 0.5,
-    'num_classes': 7,
-    'class_names': ["Anger", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"],
+    'num_classes': 4,
+    'class_names': ["0", "1", "2", "3"],
 
     'val_interval': 1,  # validate after number of epochs
     'save_interval': 3,  # save model after number of epochs
