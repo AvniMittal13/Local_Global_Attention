@@ -40,16 +40,16 @@ base_config = Config({
     'name': 'Base Config',
 
     # Training images and cropped faces
-    'train_images': 'content/engagement-global-local/engagement-global-local/ImageData3/Train',
-    'train_crop': 'content/engagement-global-local/engagement-global-local/ImageData3/CropTrain',
+    'train_images': 'engagement-global-local/ImageData3/Train',
+    'train_crop': 'engagement-global-local/ImageData3/CropTrain',
 
     # Valid images and cropped faces
-    'val_images': 'content/engagement-global-local/engagement-global-local/ImageData3/Validation',
-    'val_crop': 'content/engagement-global-local/engagement-global-local/ImageData3/CropValidation',
+    'val_images': 'engagement-global-local/ImageData3/Validation',
+    'val_crop': 'engagement-global-local/ImageData3/CropValidation',
 
     # test images and cropped faces
-    'test_images': 'content/engagement-global-local/engagement-global-local/ImageData3/Test',
-    'test_crop': 'content/engagement-global-local/engagement-global-local/ImageData3/CropTest',
+    'test_images': 'engagement-global-local/ImageData3/Test',
+    'test_crop': 'engagement-global-local/ImageData3/CropTest',
 
     'face_input_size': [96, 96],
     'context_input_size': [112, 112],
