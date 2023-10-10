@@ -54,7 +54,7 @@ def run_train():
     train_dataset = get_train_dataset()
     val_dataset = None
     if config.val_images and config.val_crop:
-        val_dataset = get_eval_dataset("val")
+        val_dataset = get_eval_dataset("test")
     optimizer = get_optimizer(train_dataset)
 
     if args.resume:
