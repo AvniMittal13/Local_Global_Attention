@@ -167,7 +167,7 @@ def get_train_dataset():
     table_label = tf.lookup.StaticHashTable(
         initializer=tf.lookup.KeyValueTensorInitializer(
             keys=tf.constant(config.class_names),
-            values=tf.constant([0, 1, 2, 3])
+            values=tf.constant([0, 1])
         ),
         default_value=tf.constant(-1),
     )
@@ -236,7 +236,7 @@ def get_eval_dataset(kind='test'):
     table_label_test = tf.lookup.StaticHashTable(
         initializer=tf.lookup.KeyValueTensorInitializer(
             keys=tf.constant(config.class_names),
-            values=tf.constant([0, 1, 2, 3])
+            values=tf.constant([0, 1])
         ),
         default_value=tf.constant(-1),
     )
