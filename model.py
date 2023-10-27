@@ -70,51 +70,82 @@ class GLAMORNet(tf.keras.Model):
         self.concat1 = tf.keras.layers.Concatenate(axis=-1)
         self.softmax1 = tf.keras.layers.Activation('softmax')
 
+        # LSTM layer
+        self.lstm = tf.keras.layers.LSTM(units=128, return_sequences=True)
+
         # Classifier after fusion
         self.final_fc1 = tf.keras.layers.Dense(units=128, activation='relu')
         self.final_dropout1 = tf.keras.layers.Dropout(rate=config.dropout_rate)
         self.final_classify = tf.keras.layers.Dense(units=num_classes, activation='softmax')
 
-    def call(self, x_face, x_context, training=False):
-        face = self.FaceEncodingNet(x_face, training=training)  # Get face encoding volume with shape (W,H,C)
-        context = self.ContextEncodingNet(x_context, training=training)
-        face_vector = self.FaceReduction(face)  # dim [1xC]
+def call(self, x_face, x_context, training=False):
+    face_dim, context_dim = 3, 3  # Assuming x_face and x_context are both 3-dimensional
 
-        # GLA module
-        N, H, W, C = context.shape
-        face_vector_repeat = tf.keras.layers.RepeatVector(H * W)(
-            face_vector)  # clone the vector to W*H vectors shape (H*W,C)
-        context_vector = tf.keras.layers.Reshape((H * W, C))(context)  # tensor with shape (H*W, C)
-        concat1 = tf.keras.layers.Concatenate(axis=-1)([face_vector_repeat,
-                                                        context_vector])  # concat face vector with each of context location vector to learn attention weight per location
+    face_vectors = []
+    context_vectors = []
+
+    for dim in range(face_dim):
+        face = self.FaceEncodingNet(x_face[dim], training=training)
+        context = self.ContextEncodingNet(x_context[dim], training=training)
+
+        face_vector = self.FaceReduction(face)  # dim [1xC]
+        face_vectors.append(face_vector)
+        context_vectors.append(context)
+
+    # GLA module
+    concat1_list = []
+    attention_weight_list = []
+    for dim in range(face_dim):
+        N, H, W, C = context_vectors[dim].shape
+        face_vector_repeat = tf.keras.layers.RepeatVector(H * W)(face_vectors[dim])
+        context_vector = tf.keras.layers.Reshape((H * W, C))(context_vectors[dim])
+        concat1 = tf.keras.layers.Concatenate(axis=-1)([face_vector_repeat, context_vector])
+        concat1_list.append(concat1)
+
         attention_weight = self.attention_fc1(concat1)
         attention_weight = self.attention_fc1_bn(attention_weight, training=training)
         attention_weight = tf.keras.layers.Activation("relu")(attention_weight)
         attention_weight = self.attention_fc2(attention_weight)
-        attention_weight = tf.nn.softmax(attention_weight, axis=1)  # a tensor with shape (H*W, 1)
-        context_vector = self.attention_dot(
-            [context_vector, attention_weight])  # context vector shape (H*W,C) dot with alpha shape (H*W,1) => (1,C)
-        context_vector = tf.keras.layers.Reshape((C,))(
-            context_vector)  # final context representation (output of the GLA module)
+        attention_weight = tf.nn.softmax(attention_weight, axis=1)
+        attention_weight_list.append(attention_weight)
 
-        w_f = self.face_weight1(face_vector)
-        w_f = self.face_weight2(w_f)
-        w_c = self.context_weight1(context_vector)
-        w_c = self.context_weight2(w_c)
+    context_vectors_after_attention = []
+    for dim in range(face_dim):
+        context_vector = context_vectors[dim]
+        attention_weight = attention_weight_list[dim]
+        context_vector = self.attention_dot([context_vector, attention_weight])
+        context_vector = tf.keras.layers.Reshape((C,))(context_vector)
+        context_vectors_after_attention.append(context_vector)
 
-        w_fc = self.concat1([w_f, w_c])
-        w_fc = self.softmax1(w_fc)
+    w_f_list = [self.face_weight1(face_vectors[dim]) for dim in range(face_dim)]
+    w_f_list = [self.face_weight2(w_f) for w_f in w_f_list]
+    w_c_list = [self.context_weight1(context_vectors_after_attention[dim]) for dim in range(face_dim)]
+    w_c_list = [self.context_weight2(w_c) for w_c in w_c_list]
 
-        face_vector = face_vector * tf.expand_dims(w_fc[:, 0], axis=-1)
-        context_vector = context_vector * tf.expand_dims(w_fc[:, 1], axis=-1)
+    w_fc_list = [self.concat1([w_f_list[dim], w_c_list[dim]]) for dim in range(face_dim)]
+    w_fc_list = [self.softmax1(w_fc) for w_fc in w_fc_list]
 
-        # concat2 = context_vector
-        concat2 = tf.keras.layers.Concatenate(axis=-1)([face_vector, context_vector])
-        features = self.final_fc1(concat2)
-        features = self.final_dropout1(features, training=training)
-        scores = self.final_classify(features)
+    face_vectors = [face_vectors[dim] * tf.expand_dims(w_fc[:, 0], axis=-1) for dim, w_fc in enumerate(w_fc_list)]
+    context_vectors_after_attention = [context_vectors_after_attention[dim] * tf.expand_dims(w_fc[:, 1], axis=-1) for dim, w_fc in enumerate(w_fc_list)]
 
-        return scores
+    concat2_list = [tf.keras.layers.Concatenate(axis=-1)([face_vectors[dim], context_vectors_after_attention[dim]]) for dim in range(face_dim)]
+
+    # Combine the results from all dimensions
+    concat2 = tf.keras.layers.Concatenate(axis=-1)(concat2_list)
+
+    # TODO: Add temporal information
+    # Combine the results from all dimensions
+    concat2 = tf.keras.layers.Concatenate(axis=-1)(concat2_list)
+
+    # Add LSTM layer with sequence length of 3
+    lstm1 = self.lstm(tf.keras.layers.Reshape((3, -1))(concat2))
+
+    features = self.final_fc1(lstm1)
+    features = self.final_dropout1(features, training=training)
+    scores = self.final_classify(features)
+
+    return scores
+
 
 
 def get_model():

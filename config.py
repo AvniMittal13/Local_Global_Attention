@@ -51,6 +51,11 @@ base_config = Config({
     'test_images': 'engagement-global-local/ImageData3/Test',
     'test_crop': 'engagement-global-local/ImageData3/CropTest',
 
+    'train_label_csv': 'PATH TO CSV LABEL FILE',
+    'test_label_csv': 'PATH TO CSV LABEL FILE',
+    'val_label_csv': 'PATH TO CSV LABEL FILE',
+    'label_column': 2,
+
     'face_input_size': [96, 96],
     'context_input_size': [112, 112],
     'batch_size': 4,
