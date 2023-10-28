@@ -93,7 +93,7 @@ def parse_image(crop_path, labels_csv, label_column):  # read image from filenam
         parts = tf.strings.split(filename, os.sep)
         video_name = parts[-1]
         # label_text = parts[-2]
-        label_text = labels_csv.loc[labels_csv[labels_csv.columns[0]] == video_name, label_column]
+        label_text = labels_csv.loc[labels_csv[labels_csv.columns[0]] == video_name, label_column].values[0]
 
         images = []
         bboxes = []
