@@ -173,8 +173,10 @@ def get_train_dataset():
     )
     ds_root = pathlib.Path(config.train_images)
     list_ds = tf.data.Dataset.list_files(str(ds_root / '*/*'))
+    print(list_ds)
     labeled_ds = list_ds.map(
         parse_image(config.train_crop))  # map each image  filenames to 3 tensors image, bbox and label_text
+    print(labeled_ds)
     dataset = labeled_ds.map(training_preprocess(table_label),
                              num_parallel_calls=config.num_parallel_calls)  # map image,bbox, label to image, face, label
     dataset = dataset.batch(config.batch_size).prefetch(
