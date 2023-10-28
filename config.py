@@ -40,20 +40,20 @@ base_config = Config({
     'name': 'Base Config',
 
     # Training images and cropped faces
-    'train_images': 'engagement-global-local/ImageData3/Train',
-    'train_crop': 'engagement-global-local/ImageData3/CropTrain',
+    'train_images': 'temporal-data/NewData2/Train',
+    'train_crop': 'temporal-data/NewData2/Output_Train',
 
     # Valid images and cropped faces
-    'val_images': 'engagement-global-local/ImageData3/Validation',
-    'val_crop': 'engagement-global-local/ImageData3/CropValidation',
+    'val_images': 'temporal-data/NewData2/Validation',
+    'val_crop': 'temporal-data/NewData2/Output_Validation',
 
     # test images and cropped faces
-    'test_images': 'engagement-global-local/ImageData3/Test',
-    'test_crop': 'engagement-global-local/ImageData3/CropTest',
+    'test_images': 'temporal-data/NewData2/Test',
+    'test_crop': 'temporal-data/NewData2/Output_Test',
 
-    'train_label_csv': 'PATH TO CSV LABEL FILE',
-    'test_label_csv': 'PATH TO CSV LABEL FILE',
-    'val_label_csv': 'PATH TO CSV LABEL FILE',
+    'train_label_csv': 'temporal-data-labels/TrainLabels.csv',
+    'test_label_csv': 'temporal-data-labels/TestLabels.csv',
+    'val_label_csv': 'temporal-data-labels/ValidationLabels.csv',
     'label_column': 2,
 
     'face_input_size': [96, 96],
