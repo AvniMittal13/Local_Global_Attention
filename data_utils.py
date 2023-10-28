@@ -90,6 +90,8 @@ def mask_face(img, bbox):  # create a mask with 0 in region of the face bbox in 
 def parse_image(crop_path, labels_csv, label_column):  # read image from filename and load it to a tensor
 
     def proc(filename):
+        print("in parse image")
+        print("filename: ", filename)
         parts = tf.strings.split(filename, os.sep)
         video_name = parts[-1]
         # label_text = parts[-2]
