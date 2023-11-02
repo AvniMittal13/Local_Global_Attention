@@ -53,8 +53,8 @@ base_config = Config({
 
     'face_input_size': [96, 96],
     'context_input_size': [112, 112],
-    'batch_size': 4,
-    'num_parallel_calls' : 2,
+    'batch_size': 3,
+    'num_parallel_calls' : 1,
 
     'lr': 5e-4,  # initial learning rate
     'momentum': 0.9,
@@ -69,7 +69,7 @@ base_config = Config({
     # pooling except the last layer
 
     'dropout_rate': 0.5,
-    'num_classes': 4,
+    'num_classes': 3,
     'class_names': ["0", "1", "2", "3"],
 
     'val_interval': 1,  # validate after number of epochs

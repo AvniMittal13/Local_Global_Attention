@@ -98,7 +98,8 @@ def parse_image(crop_path):  # read image from filename and load it to a tensor
         # image = tf.image.convert_image_dtype(image, tf.float32) #convert to range [0,1]
 
         # read the pre-detected bounding box (4 number x1,y1,x2,y2) of the corresponding image
-        bbox = tf.io.read_file(crop_path + "/" + parts[-2] + "/" + name + ".txt")  # read a tf strings with 1 line
+        # bbox = tf.io.read_file(crop_path + "/" + parts[-2] + "/" + name + ".txt")  # read a tf strings with 1 line
+        bbox = tf.io.read_file(crop_path + "/" + name + ".txt")
         bbox = tf.strings.to_number(tf.strings.split(bbox, ","), out_type=tf.dtypes.int32)  # shape (4,)
 
         return image, bbox, label_text
