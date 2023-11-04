@@ -69,7 +69,7 @@ base_config = Config({
     # pooling except the last layer
 
     'dropout_rate': 0.5,
-    'num_classes': 3,
+    'num_classes': 4,
     'class_names': ["0", "1", "2", "3"],
 
     'val_interval': 1,  # validate after number of epochs

@@ -69,7 +69,7 @@ class GLAMORNet(tf.keras.Model):
         self.context_weight2 = tf.keras.layers.Dense(units=1, activation=None)
         self.concat1 = tf.keras.layers.Concatenate(axis=-1)
         self.softmax1 = tf.keras.layers.Activation('softmax')
-        
+
         self.lstm = tf.keras.layers.LSTM(128, input_shape = (3,None))
 
         # Classifier after fusion
@@ -115,7 +115,7 @@ class GLAMORNet(tf.keras.Model):
         concat2 = tf.expand_dims(concat2, axis=0)
         # print("concat2 shape: ", concat2.shape)
         lstm_out = self.lstm(concat2)
-        features = self.final_fc1(concat2)
+        features = self.final_fc1(lstm_out)
         features = self.final_dropout1(features, training=training)
         scores = self.final_classify(features)
 
