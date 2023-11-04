@@ -195,7 +195,7 @@ def parse_image_test(crop_path):  # read image from filename and load it to a te
         image = tf.io.read_file(filename)
         image = tf.image.decode_png(image, channels=3)
 
-        bbox = tf.io.read_file(crop_path + "/" + parts[-2] + "/" + name + ".txt")  # read a tf strings with 1 line
+        bbox = tf.io.read_file(crop_path + "/" + name + ".txt")  # read a tf strings with 1 line
         bbox = tf.strings.to_number(tf.strings.split(bbox, ","), out_type=tf.dtypes.int32)  # shape (4,)
         return image, bbox, label_text
 
