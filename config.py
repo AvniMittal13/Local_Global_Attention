@@ -53,8 +53,8 @@ base_config = Config({
 
     'face_input_size': [96, 96],
     'context_input_size': [112, 112],
-    'batch_size': 3,
-    'num_parallel_calls' : 1,
+    'batch_size': 18,
+    'num_parallel_calls' : 2,
 
     'lr': 5e-4,  # initial learning rate
     'momentum': 0.9,

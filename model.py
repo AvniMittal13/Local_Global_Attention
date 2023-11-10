@@ -112,9 +112,10 @@ class GLAMORNet(tf.keras.Model):
 
         # concat2 = context_vector
         concat2 = tf.keras.layers.Concatenate(axis=-1)([face_vector, context_vector])
-        concat2 = tf.expand_dims(concat2, axis=0)
+        concat3 = tf.reshape(concat2, (concat2.shape[0]//3,3,concat2.shape[1]))
+        # concat2 = tf.expand_dims(concat2, axis=0)
         # print("concat2 shape: ", concat2.shape)
-        lstm_out = self.lstm(concat2)
+        lstm_out = self.lstm(concat3)
         features = self.final_fc1(lstm_out)
         features = self.final_dropout1(features, training=training)
         scores = self.final_classify(features)

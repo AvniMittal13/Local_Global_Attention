@@ -173,7 +173,7 @@ def get_train_dataset():
         default_value=tf.constant(-1),
     )
     ds_root = pathlib.Path(config.train_images)
-    list_ds = tf.data.Dataset.list_files(str(ds_root / '*/*'))
+    list_ds = tf.data.Dataset.list_files(str(ds_root / '*/*'), shuffle = False)
     print(list_ds)
     labeled_ds = list_ds.map(
         parse_image(config.train_crop))  # map each image  filenames to 3 tensors image, bbox and label_text
@@ -257,7 +257,7 @@ def get_eval_dataset(kind='test'):
         raise ValueError('Wrong type of dataset ("train". "val" or "test" is acceptable)')
 
     ds_root = pathlib.Path(image_path)
-    list_ds_test = tf.data.Dataset.list_files(str(ds_root / "*/*"))
+    list_ds_test = tf.data.Dataset.list_files(str(ds_root / "*/*"), shuffle = False)
     dataset_test = list_ds_test.map(parse_image_test(crop_path))
     dataset_test = dataset_test.map(testing_preprocess(table_label_test), num_parallel_calls=config.num_parallel_calls)
     dataset_test = dataset_test.batch(config.batch_size).prefetch(tf.data.experimental.AUTOTUNE)

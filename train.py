@@ -52,7 +52,8 @@ def train(model, optimizer, train_dataset, val_dataset=None, epochs=5, load_chec
 
             with tf.GradientTape() as tape:
                 y_pred = model(x_face, x_context, training=True)
-                y = tf.constant(y[0])
+                # y = tf.constant(y[0])
+                y = y[::3]
                 loss = tf.keras.losses.SparseCategoricalCrossentropy()(y, y_pred)
 
                 train_loss(loss)  # update metric
@@ -79,7 +80,8 @@ def train(model, optimizer, train_dataset, val_dataset=None, epochs=5, load_chec
 
                 for x_context, x_face, y in val_dataset:
                     y_pred = model(x_face, x_context, training=False)
-                    y = tf.constant(y[0])
+                    # y = tf.constant(y[0])
+                    y = y[::3]
                     loss = tf.keras.losses.SparseCategoricalCrossentropy()(y, y_pred)
                     val_loss(loss)  # update metric
                     val_accuracy(y, y_pred)  # update metric
@@ -122,7 +124,8 @@ def eval(model, eval_dataset):
     pb = Progbar(batches_per_epoch, width=30)
     for x_context, x_face, y in eval_dataset:
         scores = model(x_face, x_context, training=False)
-        y = tf.constant(y[0])
+        # y = tf.constant(y[0])
+        y = y[::3]
         test_accuracy(y, scores)  # update the metric
         y_pred = tf.argmax(scores, axis=1)
         pb.add(1)
